@@ -13,8 +13,8 @@ import os
 import joblib
 
 # ─── Step 1: Load and Clean ───────────────────────────────────
-df_train = pd.read_csv(r"C:\Users\ahmed\Downloads\Train.csv")
-df_test = pd.read_csv(r"C:\Users\ahmed\Downloads\Test.csv")
+df_train = pd.read_csv("Train.csv")
+df_test = pd.read_csv("Test.csv")
 
 education_map = {
     "Preschool": 1, "1st-4th": 2, "5th-6th": 3, "7th-8th": 4,
@@ -216,7 +216,7 @@ label      = le.inverse_transform(prediction)[0]
 
 print(f"\n💰 Predicted Salary: {label}")
 
-MODEL_DIR = r"C:\Users\ahmed\PycharmProjects\CodeFather\models"
+MODEL_DIR = os.path.join(os.path.dirname(__file__), "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # Save all trained models
