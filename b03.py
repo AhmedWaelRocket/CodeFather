@@ -22,6 +22,8 @@ education_map = {
     "Prof-school": 15,
     "Doctorate": 16
 }
+GENDER= {"Male": 1, "Female": 0}
+
 
 st.set_page_config(page_title="CodeFather", page_icon="💷", layout="centered")
 st.title("CodeFather")
@@ -39,10 +41,11 @@ def load_models():
         path = os.path.join(MODEL_DIR, f"{name}.pkl")
         models[name.replace("_", " ")] = joblib.load(path)
     scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
-    le     = joblib.load(os.path.join(MODEL_DIR, "label_encoder.pkl"))
+    le     = joblib.load(os.path.join(MODEL_DIR, "label_encoder_salary.pkl"))
+
     return models, scaler, le
 
-trained_models, scaler, le = load_models()
+trained_models, scaler, le= load_models()
 
 st.sidebar.header("⚙️ Settings")
 chosen_name = st.sidebar.selectbox("Choose a model", list(trained_models.keys()))
@@ -73,7 +76,7 @@ with col2:
         relationship = st.selectbox("Relationship", ["Own-child", "Unmarried", "Other-relative"])
     else:
         relationship = st.selectbox("Relationship", ["Unmarried", "Own-child", "Other-relative", "Not-in-family"])
-
+    sex = st.selectbox("Gender", ["Male", "Female"])
     position = st.selectbox("Occupation", [
         "Tech-support", "Craft-repair", "Other-service", "Sales",
         "Exec-managerial", "Prof-specialty", "Handlers-cleaners",
@@ -84,14 +87,16 @@ with col2:
 
 # Must match CodeFather.py exactly
 onehot_cols   = ["marital-status", "position", "relationship"]
-cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week']  # 4 cols, MinMaxScaler
+cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week','sex']
 
 X_train_cols = trained_models[chosen_name].feature_names_in_
 education_num=education_map.get(education)
+sex1=GENDER.get(sex)
 if st.button("🔮 Predict Salary", use_container_width=True):
     user_df = pd.DataFrame([{
         'age':            age,
         'education-num':  education_num,
+        'sex': sex1,
         'capital-gain':   capital_gain,
         'capital-loss':   capital_loss,
         'hours-per-week': hours_per_week,
@@ -100,7 +105,7 @@ if st.button("🔮 Predict Salary", use_container_width=True):
         'relationship':   relationship
     }])
 
-    # 1. Scale — same 4 cols, same MinMaxScaler as CodeFather.py
+
     user_df[cols_to_scale] = scaler.transform(user_df[cols_to_scale])
 
     # 2. One-hot encode
