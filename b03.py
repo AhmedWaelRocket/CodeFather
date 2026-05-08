@@ -86,12 +86,13 @@ with col2:
 
 
 onehot_cols   = ["marital-status", "position", "relationship"]
-cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week','sex']
+cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week']
 
-X_train_cols = trained_models[chosen_name].feature_names_in_
 education_num=education_map.get(education)
 sex1=GENDER.get(sex)
 if st.button("🔮 Predict Salary", use_container_width=True):
+    X_train_cols = trained_models[chosen_name].feature_names_in_
+    model = trained_models[chosen_name]
     user_df = pd.DataFrame([{
         'age':            age,
         'education-num':  education_num,
@@ -117,7 +118,6 @@ if st.button("🔮 Predict Salary", use_container_width=True):
     user_encoded = user_df.reindex(columns=X_train_cols, fill_value=0)
 
     # 4. Predict
-    model      = trained_models[chosen_name]
     prediction = model.predict(user_encoded)
     label      = le.inverse_transform(prediction)[0]
 
