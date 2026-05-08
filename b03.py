@@ -85,7 +85,6 @@ with col2:
     ])
 
 
-# Must match CodeFather.py exactly
 onehot_cols   = ["marital-status", "position", "relationship"]
 cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week','sex']
 
