@@ -131,9 +131,6 @@ for name, model in models.items():
 
 
 
-
-
-
 # ─── User Input & Prediction ─────────────────────────────────
 print("\n🔮 Prediction Mode")
 print("Available models:")
