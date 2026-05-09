@@ -50,7 +50,7 @@ trained_models, scaler, le= load_models()
 st.sidebar.header("⚙️ Settings")
 chosen_name = st.sidebar.selectbox("Choose a model", list(trained_models.keys()))
 
-st.subheader("📋 Enter Person Details")
+st.subheader("Enter your Personal Details")
 col1, col2 = st.columns(2)
 
 with col1:
@@ -90,7 +90,7 @@ cols_to_scale = ['capital-gain', 'capital-loss', 'age', 'hours-per-week']
 
 education_num=education_map.get(education)
 sex1=GENDER.get(sex)
-if st.button("🔮 Predict Salary", use_container_width=True):
+if st.button("Predict Salary", use_container_width=True):
     X_train_cols = trained_models[chosen_name].feature_names_in_
     model = trained_models[chosen_name]
     user_df = pd.DataFrame([{
@@ -108,16 +108,16 @@ if st.button("🔮 Predict Salary", use_container_width=True):
 
     user_df[cols_to_scale] = scaler.transform(user_df[cols_to_scale])
 
-    # 2. One-hot encode
+    #One-hot encode
     for col in onehot_cols:
         dummies = pd.get_dummies(user_df[col], prefix=col).astype(int)
         user_df = user_df.drop(columns=[col])
         user_df = pd.concat([user_df, dummies], axis=1)
 
-    # 3. Align to training columns
+    #Alignment
     user_encoded = user_df.reindex(columns=X_train_cols, fill_value=0)
 
-    # 4. Predict
+    #Predict
     prediction = model.predict(user_encoded)
     label      = le.inverse_transform(prediction)[0]
 
